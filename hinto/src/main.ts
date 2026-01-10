@@ -19,7 +19,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
     </a>
     <h1>Hinto</h1>
-    <p id="guess-count">Guesses: 0</p>
+    <p class="guess" id="guess-count">Guesses: 0</p>
   </div>
   <div class="textbox">
     <input type="text" id="simple-input" maxlength="5" minlength="5" placeholder="Enter word"/>

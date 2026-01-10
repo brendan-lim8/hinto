@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -94,15 +96,9 @@ h1 {
   letter-spacing: 1px;
 }
 
-#guess-count {
-  color: #242424;
-  font-size: 1.1em;
-  margin: 0.5rem 0 0 0;
-  font-weight: 500;
-}
 
 .logo {
-  height: 7em;
+  height: 14em;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -110,9 +106,14 @@ h1 {
 .logo:hover {
   filter: drop-shadow(0 0 8px rgba(232, 182, 110, 0.3));
 }
-
+#guess-count {
+  color: #d4a156;
+  font-size: 1.1em;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
 .textbox {
-  padding: 1.5em;
+  
   width: 100%;
   max-width: 400px;
   margin-bottom: 1.5rem;
@@ -127,7 +128,7 @@ h1 {
   background-color: #fff;
   color: #242424;
   border: 2px solid #e8b66e;
-  border-radius: 8px;
+  border-radius: 20px;
   font-weight: 500;
   letter-spacing: 2px;
   transition: all 0.3s ease;
@@ -148,7 +149,7 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 20px;
   border: none;
   padding: 0.9em 2.5em;
   font-size: 1.1em;
