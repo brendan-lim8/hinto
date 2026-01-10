@@ -12,9 +12,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .howto {
   text-align: center;
+  color: #e8b66e;
 }
+
 body {
   margin: 0;
   display: flex;
@@ -32,12 +35,28 @@ body {
 }
 
 .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 250px;
   padding: 20px;
   border-right: 1px solid #ddd;
-  min-height: 100vh;
-  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
   background-color: #f5e6d3;
+  z-index: 10;
+  color: #242424;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #242424;
 }
 
 .content {
@@ -48,6 +67,8 @@ body {
   justify-content: center;
   padding: 2rem;
   text-align: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
 h1 {
@@ -64,13 +85,11 @@ h1 {
   margin-left: 1px;
 }
 
-.textbox{
+.textbox {
   padding: 1em;
   padding-bottom: 3em;
   width: 350px;
-  
 }
-
 
 .textbox input {
   width: 100%;
@@ -78,8 +97,15 @@ h1 {
   height: 40px;
   text-align: center;
   font-size: 25px;
+  background-color: #fff;
+  color: #242424;
+  border: 2px solid #e8b66e;
+  border-radius: 4px;
 }
 
+.textbox input::placeholder {
+  color: #999;
+}
 
 button {
   border-radius: 8px;
@@ -93,21 +119,18 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #d4a156;
   background-color: #d4a156;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-.gemini{
+
+.gemini {
   padding-top: 1em;
-}
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
+  color: #242424;
 }
