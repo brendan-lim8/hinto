@@ -13,24 +13,53 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.howto {
+  text-align: center;
+}
+
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+}
+
+#app {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  padding: 20px;
+  border-right: 1px solid #444;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #242424;
+  z-index: 10;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
 .logo {
@@ -40,13 +69,11 @@ h1 {
   transition: filter 300ms;
 }
 
-.textbox{
+.textbox {
   padding: 1em;
   padding-bottom: 3em;
   width: 350px;
-  
 }
-
 
 .textbox input {
   width: 100%;
@@ -55,7 +82,6 @@ h1 {
   text-align: center;
   font-size: 25px;
 }
-
 
 button {
   border-radius: 8px;
@@ -68,13 +94,16 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #a87b1f;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-.gemini{
+
+.gemini {
   padding-top: 1em;
 }
