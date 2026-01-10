@@ -1,5 +1,5 @@
 import './style.css'
-import { getHint } from './hints.ts'
+//import { getHint } from './hints.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <aside class="sidebar">
