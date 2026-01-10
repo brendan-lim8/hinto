@@ -22,8 +22,12 @@ export async function getHint(guessedWord: string, tries: Number) {
             model: 'gemma-3-27b-it',
             contents: prompt
         });
-        const jsonResponse = JSON.parse(response.text);
-        console.log(jsonResponse);
+        const responseText = response.text;
+        if (responseText == undefined) {
+            return;
+        }
+        const jsonResponse = JSON.parse(responseText);
+        return jsonResponse;
     } catch (err) {
         throw err;
         console.log(err);
