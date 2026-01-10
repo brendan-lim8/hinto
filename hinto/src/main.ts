@@ -56,7 +56,7 @@ async function guessWord(){
   }
   
   // Add new guess
-  count+=1; 
+  count+=1;
   guessedWords.push(user_guess);
   
   // Update display
