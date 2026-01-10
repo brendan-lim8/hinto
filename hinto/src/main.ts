@@ -1,5 +1,5 @@
 import './style.css'
-import { getHint } from './hints.ts'
+// import { getHint } from './hints.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <aside class="sidebar">
@@ -41,9 +41,11 @@ const geminiText = document.querySelector<HTMLParagraphElement>('.gemini')!;
 let user_guess = '';
 let count = 0;
 let guessedWords: { guess: string, hint: string }[] = [];
-let loadingInterval: number | undefined;
+let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
 function showLoadingIndicator(show: boolean) {
+  input.disabled = show;
+  button.disabled = show;
   if (show) {
     geminiText.textContent = 'Thinking';
     let dots = '';
@@ -59,6 +61,7 @@ function showLoadingIndicator(show: boolean) {
       clearInterval(loadingInterval);
       loadingInterval = undefined;
     }
+    input.focus();
   }
 }
 
@@ -108,6 +111,8 @@ async function guessWord() {
     if (data.result === 'correct') {
       // OTHER SUCCESS ACTIONS
       geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+      input.disabled = true;
+      button.disabled = true;
       return;
     }
 
