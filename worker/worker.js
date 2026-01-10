@@ -2,29 +2,56 @@ export default {
     async fetch(request, env, ctx) {
         // =================================================================================
 
+        // CORS headers
+        const corsHeaders = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        };
+
+        // Handle OPTIONS preflight request
+        if (request.method === 'OPTIONS') {
+            return new Response(null, { headers: corsHeaders });
+        }
+
         // Initial request validations
 
         if (request.method !== 'POST') {
-            return new Response(JSON.stringify({ error: "Use POST" }), { status: 405 });
+            return new Response(JSON.stringify({ error: "Use POST" }), {
+                status: 405,
+                headers: corsHeaders
+            });
         }
 
         let body = {};
         try {
             body = await request.json();
         } catch (e) {
-            return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
+            return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+                status: 400,
+                headers: corsHeaders
+            });
         }
 
         try {
             const { guess, target } = body;
             if (!guess || !target) {
-                return new Response(JSON.stringify({ error: "Missing 'guess' or 'target'" }), { status: 400 });
+                return new Response(JSON.stringify({ error: "Missing 'guess' or 'target'" }), {
+                    status: 400,
+                    headers: corsHeaders
+                });
             }
             if (typeof guess !== 'string' || typeof target !== 'string') {
-                return new Response(JSON.stringify({ error: "'guess' and 'target' must be strings" }), { status: 400 });
+                return new Response(JSON.stringify({ error: "'guess' and 'target' must be strings" }), {
+                    status: 400,
+                    headers: corsHeaders
+                });
             }
         } catch (e) {
-            return new Response(JSON.stringify({ error: "Error processing request (1)" }), { status: 400 });
+            return new Response(JSON.stringify({ error: "Error processing request (1)" }), {
+                status: 400,
+                headers: corsHeaders
+            });
         }
 
         // Validate guess
@@ -32,27 +59,99 @@ export default {
         let cleaned_target = body.target.replace(/[^a-zA-Z]+/g, '').toLowerCase();
         if (cleaned_guess === cleaned_target) {
             // Early return if correct, modify response as needed
-            return new Response(JSON.stringify({ result: "correct", guessed: cleaned_guess }), { status: 200 });
+            return new Response(JSON.stringify({ result: "correct", guessed: cleaned_guess }), {
+                status: 200,
+                headers: corsHeaders
+            });
         }
         // Currently only supporting 5-letter words
-        if (cleaned_guess.length === 0 || cleaned_guess.length !== 5 || cleaned_target.length === 0 || cleaned_target.length !== 5) {
-            return new Response(JSON.stringify({ error: "Invalid 'guess' or 'target' length after cleaning", guessed: cleaned_guess }), { status: 400 });
+        if (cleaned_guess.length === 0 || cleaned_guess.length > 20 || cleaned_target.length === 0 || cleaned_target.length > 20) {
+            return new Response(JSON.stringify({ error: "Invalid 'guess' or 'target' length after cleaning", guessed: cleaned_guess }), {
+                status: 400,
+                headers: corsHeaders
+            });
         }
 
         // =================================================================================
 
         // Build/send Gemini API request
 
-        const api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+        const api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent";
         const gemini_key = env.GEMINI_KEY;
         const request_body = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": `A player guessed "${cleaned_guess}" but the target word is "${cleaned_target}". Give a helpful hint that connects the guess to the target word. Focus on shared letters, sounds, word categories, or meanings. Be clear and direct but don't give away the answer completely. Keep it one sentence under 15 words. Also provide a closeness score 0-10 where: 0=completely unrelated, 3=some connection, 5=meaningful similarity, 8=very close, 10=identical. Base closeness on shared letters, sounds, meaning, and category. 
 
+CRITICAL: Your response must be EXACTLY this format with no extra characters:
+{"hint": "your helpful hint here", "closeness": number}
+
+Do NOT use markdown. Do NOT use code blocks. Do NOT use backticks. Do NOT use \`\`\`json or \`\`\`. Do NOT add any explanatory text before or after. Start your response immediately with { and end with }. Nothing else.`
+                        }
+                    ]
+                }
+            ]
         }
+        const headers = {
+            "x-goog-api-key": gemini_key,
+            'Content-Type': 'application/json'
+        }
+        let gemini_response;
+        try {
+            gemini_response = await fetch(api_url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(request_body)
+            });
+        }
+        catch (e) {
+            return new Response(JSON.stringify({ error: "Error contacting Gemini API" }), {
+                status: 500,
+                headers: corsHeaders
+            });
+        }
+
+        if (!gemini_response.ok) {
+            return new Response(JSON.stringify({ error: "Gemini API returned an error", details: await gemini_response.text() }), {
+                status: 500,
+                headers: corsHeaders
+            });
+        }
+
+        let gemini_data;
+        try {
+            gemini_data = await gemini_response.json();
+        } catch (e) {
+            return new Response(JSON.stringify({ error: "Error parsing Gemini API response" }), {
+                status: 500,
+                headers: corsHeaders
+            });
+        }
+
+        const responseText = gemini_data.candidates[0].content.parts[0].text.trim();
+        let parsed_response;
+        try {
+            parsed_response = JSON.parse(responseText);
+        } catch (e) {
+            return new Response(JSON.stringify({ error: "Error parsing Gemini response JSON", responseText: responseText }), {
+                status: 500,
+                headers: corsHeaders
+            });
+        }
+        return new Response(JSON.stringify({ result: "incorrect", guessed: cleaned_guess, hint: parsed_response.hint, closeness: parsed_response.closeness }), {
+            status: 200,
+            headers: corsHeaders
+        });
 
         // =================================================================================
 
         // Temporary return
 
-        return new Response(JSON.stringify({ result: "incorrect", guessed: cleaned_guess }), { status: 200 });
+        return new Response(JSON.stringify({ result: "incorrect", guessed: cleaned_guess }), {
+            status: 200,
+            headers: corsHeaders
+        });
     }
 };

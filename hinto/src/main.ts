@@ -42,35 +42,60 @@ let user_guess = '';
 let count = 0;
 let guessedWords: string[] = [];
 
-async function missingLetters(){
+async function missingLetters() {
   geminiText.textContent = `Need 5 letters`;
 }
-async function guessWord(){
+
+async function guessWord() {
   user_guess = input.value.toLowerCase();
-  
+
   // Check if word was already guessed
   if (guessedWords.includes(user_guess)) {
     geminiText.textContent = `Already guessed "${user_guess}"`;
     input.value = '';
     return;
   }
-  
+
   // Add new guess
-  count+=1; 
+  count += 1;
   guessedWords.push(user_guess);
-  
+
   // Update display
   console.log('User guess:', user_guess, 'count:', count);
   guessCountDisplay.textContent = `Guesses: ${count}`;
-  
+
   // Add to list (prepend to show latest first)
   const listItem = document.createElement('li');
   listItem.textContent = user_guess;
   listItem.style.padding = '0.5rem 0';
   guessList.prepend(listItem);
-  
-  // Clear message and input
-  geminiText.textContent = '';
+
+  // Fetch hint from backend
+  const body = { guess: user_guess, target: target };
+  const response = await fetch('https://hinto.friedmandaniel111.workers.dev/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+  console.log(data);
+
+  if (data.result === 'correct') {
+    // OTHER SUCCESS ACTIONS
+    geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+    return;
+  }
+
+  const hint = data.hint;
+  geminiText.textContent = hint;
+
+  // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
+  const closeness = data.closeness;
+
+  // Clear input
   input.value = '';
 }
 
@@ -83,12 +108,12 @@ input.addEventListener('keypress', (e) => {
   if (!/[A-Za-z]/.test(e.key) && e.key !== 'Enter') {
     e.preventDefault();
   }
-  
+
   if (e.key === 'Enter') {
-    if (input.value.length === 5){
+    if (input.value.length === 5) {
       guessWord()
     }
-    else{
+    else {
       missingLetters()
     }
   }
@@ -96,11 +121,16 @@ input.addEventListener('keypress', (e) => {
 
 
 button.addEventListener('click', () => {
-  if (input.value.length === 5)
-  {
+  if (input.value.length === 5) {
     guessWord()
   }
-  else{
+  else {
     missingLetters()
   }
 });
+
+// Fetch a target word
+const response = await fetch('https://random-word-api.vercel.app/api?words=1&length=5');
+const data = await response.json();
+const target = data[0].toLowerCase();
+console.log('Target word:', target);
