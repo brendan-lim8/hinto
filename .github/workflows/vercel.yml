@@ -18,24 +18,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel
-
       - name: Install dependencies
+        working-directory: ./hinto
         run: npm ci
 
-      - name: Compile TypeScript
-        run: npx tsc --project hinto/tsconfig.json
-
-      - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
       - name: Build project
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./hinto
+        run: npm run build
 
       - name: Deploy to Vercel
-        id: deploy
-        run: |
-          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "Deployment URL: $DEPLOY_URL"
-          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./hinto
