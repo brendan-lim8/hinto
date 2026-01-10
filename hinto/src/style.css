@@ -1,11 +1,11 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #242424;
+  background-color: #f5e6d3;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,84 +13,176 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  background-color: #f5e6d3;
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  padding: 2rem 1.5rem;
+  border-right: 2px solid #e8b66e;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #faf5f0;
+  z-index: 10;
+  color: #242424;
+}
+
+.howto {
+  text-align: center;
+  color: #e8b66e;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 1.2rem;
+  font-size: 0.95em;
+  color: #242424;
+  line-height: 1.6;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
   text-align: center;
+  width: 100%;
+  margin-left: 250px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 3.5em;
+  line-height: 1.1;
+  margin: 0;
+  color: #e8b66e;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#guess-count {
+  color: #242424;
+  font-size: 1.1em;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 7em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 8px rgba(232, 182, 110, 0.3));
 }
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
+
+.textbox {
+  padding: 1.5em;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1.5rem;
+}
+
+.textbox input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 50px;
+  text-align: center;
+  font-size: 1.5em;
+  background-color: #fff;
+  color: #242424;
+  border: 2px solid #e8b66e;
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.textbox input:focus {
+  outline: none;
+  border-color: #d4a156;
+  box-shadow: 0 0 0 3px rgba(232, 182, 110, 0.1);
+}
+
+.textbox input::placeholder {
+  color: #bbb;
 }
 
 .card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  margin-bottom: 1rem;
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  border: none;
+  padding: 0.9em 2.5em;
+  font-size: 1.1em;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #e8b66e;
+  color: #fff;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(232, 182, 110, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+  background-color: #d4a156;
+  box-shadow: 0 6px 16px rgba(212, 161, 86, 0.3);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(212, 161, 86, 0.2);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid #d4a156;
+  outline-offset: 2px;
+}
+
+.gemini {
+  padding-top: 1rem;
+  color: #e8b66e;
+  font-weight: 500;
+  min-height: 1.5em;
 }
