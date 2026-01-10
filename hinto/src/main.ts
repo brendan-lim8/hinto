@@ -7,12 +7,12 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </a>
     <h1>Hinto</h1>
     <div class="textbox">
-      <label htmlFor="simple-input"></label>
-      <input type="text" id="simple-input" placeholder="Enter 5 letter word.."/>
+      <input type="text" id="simple-input" maxlength="5" placeholder="Enter 5-letter word"/>
     </div>
       <div class="card">
-      <button id="counter" type="button"></button>
+      <button id="counter" type="button">Enter</button>
     </div>
+    <p class=gemini >Gemini text here</p>
 
   </div>
 `
