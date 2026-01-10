@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd hinto && npm run build",
+  "outputDirectory": "hinto/dist",
+  "installCommand": "cd hinto && npm install"
+}
