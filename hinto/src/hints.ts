@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const genAI = new GoogleGenAI({
-    apiKey: "AIzaSyA1VxjVSK_J5HXbes9KkFply_7KuJY7huE"
+    apiKey: "" // I changed it :)
 });
 
 function formatPrompt(guessedWord: string, tries: Number) {
