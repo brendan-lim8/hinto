@@ -34,7 +34,7 @@ export default {
         }
 
         try {
-            const { guess, target } = body;
+            const { guess, target, history } = body;
             if (!guess || !target) {
                 return new Response(JSON.stringify({ error: "Missing 'guess' or 'target'" }), {
                     status: 400,
@@ -76,6 +76,8 @@ export default {
 
         // Build/send Gemini API request
 
+        const previous_guesses_and_hints = body.history ? body.history.map(item => `Guess: ${item.guess}, Hint: ${item.hint}`).join('\n') : "No previous guesses.";
+
         const api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent";
         const gemini_key = env.GEMINI_KEY;
         const request_body = {
@@ -83,10 +85,27 @@ export default {
                 {
                     "parts": [
                         {
-                            "text": `A player guessed "${cleaned_guess}" but the target word is "${cleaned_target}". Give a helpful hint that connects the guess to the target word. Focus on shared letters, sounds, word categories, or meanings. Be clear and direct but don't give away the answer completely. Keep it one sentence under 15 words. Also provide a closeness score 0-10 where: 0=completely unrelated, 3=some connection, 5=meaningful similarity, 8=very close, 10=identical. Base closeness on shared letters, sounds, meaning, and category. 
+                            "text": `A player is trying to guess a secret word. The target word is "${cleaned_target}".
+The player has made a new guess: "${cleaned_guess}".
 
-CRITICAL: Your response must be EXACTLY this format with no extra characters:
+Here are the previous guesses and the hints they received:
+${previous_guesses_and_hints}
+
+Your task is to provide a helpful hint based on the new guess.
+
+**Instructions:**
+1.  **Analyze the connection:** Compare the new guess "${cleaned_guess}" to the target word "${cleaned_target}".
+2.  **Consider the history:** Use the previous hints to give a progressively more revealing hint. Don't give hints too similar to past ones. Instead, offer insight about how the target word is used.
+3.  **Give a helpful hint:** The hint should connect the guess to the target word. If they are far off, give a more general direction (e.g., "Think of a type of animal."). As the guess gets closer, the hint should be more specific.
+4.  **Keep it short:** The hint must be a single sentence under 10 words.
+5.  **Provide a closeness score:** Rate the closeness of the guess to the target on a scale of 0-10 (0=unrelated, 3=some connection, 5=similar category, 8=very close, 10=identical). Base the score on meaning and category.
+
+**CRITICAL: Your response must be in this exact JSON format with no extra characters, markdown, or code blocks:**
 {"hint": "your helpful hint here", "closeness": number}
+
+**Example:**
+If the target is "fruit" and the guess is "apple", your response might be:
+{"hint": "You're in the right category.", "closeness": 8}
 
 Do NOT use markdown. Do NOT use code blocks. Do NOT use backticks. Do NOT use \`\`\`json or \`\`\`. Do NOT add any explanatory text before or after. Start your response immediately with { and end with }. Nothing else.`
                         }

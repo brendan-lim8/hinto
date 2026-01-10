@@ -19,7 +19,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <p class="guess" id="guess-count">Guesses: 0</p>
   </div>
   <div class="textbox">
-    <input type="text" id="simple-input" maxlength="5" minlength="5" placeholder="Enter word"/>
+    <input type="text" id="simple-input" maxlength="20" minlength="3" placeholder="Enter word"/>
   </div>
   <div class="card">
     <button id="counter" type="button">Enter</button>
@@ -40,17 +40,17 @@ const geminiText = document.querySelector<HTMLParagraphElement>('.gemini')!;
 
 let user_guess = '';
 let count = 0;
-let guessedWords: string[] = [];
+let guessedWords: { guess: string, hint: string }[] = [];
 
 async function missingLetters() {
-  geminiText.textContent = `Need 5 letters`;
+  geminiText.textContent = `Guess must be between 3 and 20 letters long.`;
 }
 
 async function guessWord() {
   user_guess = input.value.toLowerCase();
 
   // Check if word was already guessed
-  if (guessedWords.includes(user_guess)) {
+  if (guessedWords.some(item => item.guess === user_guess)) {
     geminiText.textContent = `Already guessed "${user_guess}"`;
     input.value = '';
     return;
@@ -58,7 +58,7 @@ async function guessWord() {
 
   // Add new guess
   count += 1;
-  guessedWords.push(user_guess);
+
 
   // Update display
   console.log('User guess:', user_guess, 'count:', count);
@@ -71,7 +71,7 @@ async function guessWord() {
   guessList.prepend(listItem);
 
   // Fetch hint from backend
-  const body = { guess: user_guess, target: target };
+  const body = { guess: user_guess, target: target, history: guessedWords };
   const response = await fetch('https://hinto.friedmandaniel111.workers.dev/', {
     method: 'POST',
     headers: {
@@ -91,6 +91,7 @@ async function guessWord() {
 
   const hint = data.hint;
   geminiText.textContent = hint;
+  guessedWords.push({ guess: user_guess, hint: hint });
 
   // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
   const closeness = data.closeness;
@@ -110,7 +111,7 @@ input.addEventListener('keypress', (e) => {
   }
 
   if (e.key === 'Enter') {
-    if (input.value.length === 5) {
+    if (input.value.length < 20 && input.value.length > 2) {
       guessWord()
     }
     else {
@@ -121,7 +122,7 @@ input.addEventListener('keypress', (e) => {
 
 
 button.addEventListener('click', () => {
-  if (input.value.length === 5) {
+  if (input.value.length < 20 && input.value.length > 2) {
     guessWord()
   }
   else {
