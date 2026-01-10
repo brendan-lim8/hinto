@@ -1,24 +1,19 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
+    <a>
+      <img src="src/images/dog-check.png" class="logo vanilla" alt="Habinu Logo" />
     </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
+    <h1>Hinto</h1>
+    <div class="textbox">
+      <label htmlFor="simple-input"></label>
+      <input type="text" id="simple-input" placeholder="Enter 5 letter word.."/>
+    </div>
+      <div class="card">
       <button id="counter" type="button"></button>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
+
   </div>
 `
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
