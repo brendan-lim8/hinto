@@ -33,3 +33,4 @@ jobs:
           DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "Deployment URL: $DEPLOY_URL"
           echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+                  
