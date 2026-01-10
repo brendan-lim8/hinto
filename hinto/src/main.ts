@@ -2,33 +2,33 @@ import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <aside class="sidebar">
-      <h2 class="howto">How to Play</h2>
-      <ul>
-        <li>Find the secret 5 letter word, you have unlimited guesses.</li>
-        <li>Each guess will give you a hints relating to the secret word.</li>
-        <li>The dog will also change its expression based on how hot or cold you are to the word</li>
-      </ul>
-    </aside>  
+  <h2 class="howto">How to Play</h2>
+  <ul>
+    <li>Find the secret 5 letter word, you have unlimited guesses.</li>
+    <li>Each guess will give you hints relating to the secret word.</li>
+    <li>The dog will change its expression based on how hot or cold you are to the word</li>
+  </ul>
+</aside>  
 <div class="content">
   <div class="header">
     <a>
-      <img src="src/images/dog-huh.png" class="logo vanilla" alt="Habinu Logo" />
+      <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
     </a>
     <h1>Hinto</h1>
     <p id="guess-count">Guesses: 0</p>
-    <div class="textbox">
-      <input type="text" id="simple-input" maxlength="5" minlength="5" placeholder="Enter 5-letter word"/>
-    </div>
-      <div class="card">
-        <button id="counter" type="button">Enter</button>
-      </div>
-      <p class="gemini"></p>
-    </div>
-    <div id="guess-list-container" style="position: fixed; right: 2rem; top: 2rem; width: 250px; border-left: 1px solid #ddd; padding-left: 1rem; max-height: 80vh; overflow-y: auto; background-color: #f5e6d3;">
-      <h3 style="position: sticky; top: 0; background-color: #f5e6d3; margin: 0; padding: 1rem 0; color: #e8b66e;">Your Guesses</h3>
-      <ul id="guess-list" style="list-style: none; padding: 0; margin: 0; color: #242424;"></ul>
-    </div>
   </div>
+  <div class="textbox">
+    <input type="text" id="simple-input" maxlength="5" minlength="5" placeholder="Enter word"/>
+  </div>
+  <div class="card">
+    <button id="counter" type="button">Enter</button>
+  </div>
+  <p class="gemini"></p>
+</div>
+<div id="guess-list-container" style="position: fixed; right: 2rem; top: 2rem; width: 250px; border-left: 2px solid #e8b66e; padding-left: 1.5rem; max-height: 80vh; overflow-y: auto; background-color: #faf5f0; border-radius: 8px;">
+  <h3 style="position: sticky; top: 0; background-color: #faf5f0; margin: 0; padding: 1rem 0; color: #e8b66e; font-weight: 600;">Your Guesses</h3>
+  <ul id="guess-list" style="list-style: none; padding: 0; margin: 0; color: #242424;"></ul>
+</div>
 `
 
 const input = document.querySelector<HTMLInputElement>('#simple-input')!;
