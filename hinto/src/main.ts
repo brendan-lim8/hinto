@@ -13,9 +13,12 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 </aside>  
 <div class="content">
   <div class="header">
-    <a>
-      <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
-    </a>
+    <div class="speech-bubble-container">
+      <p class="gemini speech-bubble"></p>
+      <a>
+        <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
+      </a>
+    </div>
     <h1>Hinto</h1>
     <p class="guess" id="guess-count">Guesses: 0</p>
   </div>
@@ -25,7 +28,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="card">
     <button id="counter" type="button">Enter</button>
   </div>
-  <p class="gemini"></p>
 </div>
 <div id="guess-list-container" style="position: fixed; right: 2rem; top: 2rem; width: 250px; border-left: 2px solid #e8b66e; padding-left: 1.5rem; max-height: 80vh; overflow-y: auto; background-color: #faf5f0; border-radius: 8px;">
   <h3 style="position: sticky; top: 0; background-color: #faf5f0; margin: 0; padding: 1rem 0; color: #e8b66e; font-weight: 600;">Your Guesses</h3>
@@ -141,11 +143,13 @@ async function guessWord() {
     updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
     logoImg.src = 'src/images/dogcelebrate.png';
     geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+    geminiText.classList.add('active');
     return;
   }
 
   const hint = data.hint;
   geminiText.textContent = hint;
+  geminiText.classList.add('active');
   guessedWords.push({ guess: user_guess, hint: hint });
 
   // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
