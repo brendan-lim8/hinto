@@ -2,7 +2,8 @@ import './style.css'
 // import { getHint } from './hints.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<aside class="sidebar">
+<button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+<aside class="sidebar" id="sidebar">
   <h2 class="howto">How to Play</h2>
   <ul>
     <li>Find the secret 5 letter word, you have unlimited guesses.</li>
@@ -31,6 +32,14 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <ul id="guess-list" style="list-style: none; padding: 0; margin: 0; color: #242424;"></ul>
 </div>
 `
+
+// Sidebar toggle
+const sidebar = document.querySelector<HTMLElement>('#sidebar')!;
+const sidebarToggle = document.querySelector<HTMLButtonElement>('#sidebar-toggle')!;
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
 
 const input = document.querySelector<HTMLInputElement>('#simple-input')!;
 const button = document.querySelector<HTMLButtonElement>('#counter')!;
