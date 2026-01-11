@@ -1,5 +1,5 @@
 import './style.css'
-//import { getHint } from './hints.ts'
+// import { getHint } from './hints.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <aside class="sidebar">
@@ -41,6 +41,29 @@ const geminiText = document.querySelector<HTMLParagraphElement>('.gemini')!;
 let user_guess = '';
 let count = 0;
 let guessedWords: { guess: string, hint: string }[] = [];
+let loadingInterval: ReturnType<typeof setInterval> | undefined;
+
+function showLoadingIndicator(show: boolean) {
+  input.disabled = show;
+  button.disabled = show;
+  if (show) {
+    geminiText.textContent = 'Thinking';
+    let dots = '';
+    loadingInterval = setInterval(() => {
+      dots += '.';
+      if (dots.length > 3) {
+        dots = '';
+      }
+      geminiText.textContent = `Thinking${dots}`;
+    }, 300);
+  } else {
+    if (loadingInterval) {
+      clearInterval(loadingInterval);
+      loadingInterval = undefined;
+    }
+    input.focus();
+  }
+}
 
 async function missingLetters() {
   geminiText.textContent = `Guess must be between 3 and 20 letters long.`;
@@ -71,33 +94,42 @@ async function guessWord() {
   guessList.prepend(listItem);
 
   // Fetch hint from backend
+  showLoadingIndicator(true);
   const body = { guess: user_guess, target: target, history: guessedWords };
-  const response = await fetch('https://hinto.friedmandaniel111.workers.dev/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  try {
+    const response = await fetch('https://hinto.friedmandaniel111.workers.dev/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
 
-  const data = await response.json();
-  console.log(data);
+    const data = await response.json();
+    console.log(data);
 
-  if (data.result === 'correct') {
-    // OTHER SUCCESS ACTIONS
-    geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
-    return;
+    if (data.result === 'correct') {
+      // OTHER SUCCESS ACTIONS
+      geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+      input.disabled = true;
+      button.disabled = true;
+      return;
+    }
+
+    const hint = data.hint;
+    geminiText.textContent = hint;
+    guessedWords.push({ guess: user_guess, hint: hint });
+
+    // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
+    const closeness = data.closeness;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    geminiText.textContent = 'Could not get hint.';
+  } finally {
+    showLoadingIndicator(false);
+    // Clear input
+    input.value = '';
   }
-
-  const hint = data.hint;
-  geminiText.textContent = hint;
-  guessedWords.push({ guess: user_guess, hint: hint });
-
-  // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
-  const closeness = data.closeness;
-
-  // Clear input
-  input.value = '';
 }
 
 input.addEventListener('input', (e) => {
@@ -111,7 +143,7 @@ input.addEventListener('keypress', (e) => {
   }
 
   if (e.key === 'Enter') {
-    if (input.value.length < 20 && input.value.length > 2) {
+    if (input.value.length < 21 && input.value.length > 0) {
       guessWord()
     }
     else {
@@ -122,7 +154,7 @@ input.addEventListener('keypress', (e) => {
 
 
 button.addEventListener('click', () => {
-  if (input.value.length < 20 && input.value.length > 2) {
+  if (input.value.length < 21 && input.value.length > 0) {
     guessWord()
   }
   else {
