@@ -47,7 +47,9 @@ const sidebarToggle = document.querySelector<HTMLButtonElement>('#sidebar-toggle
 
 sidebarToggle.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
+  sidebarToggle.classList.toggle('collapsed');
 });
+
 
 const input = document.querySelector<HTMLInputElement>('#simple-input')!;
 const button = document.querySelector<HTMLButtonElement>('#counter')!;

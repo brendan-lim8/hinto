@@ -49,29 +49,18 @@ body {
 .sidebar.collapsed {
   transform: translateX(-100%);
 }
-
-#app > .sidebar-toggle {
+#sidebar-toggle {
   position: fixed;
   left: 250px;
   top: 1rem;
-  width: 50px;
-  height: 50px;
-  background-color: #e8b66e;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.5em;
-  cursor: pointer;
   transition: left 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 11;
+  z-index:20;
 }
 
-#app > .sidebar.collapsed ~ .content {
-  margin-left: 0;
+#sidebar-toggle.collapsed {
+  left: 0.5rem;
 }
+
 
 #app > .sidebar.collapsed ~ .sidebar-toggle {
   left: 0;
