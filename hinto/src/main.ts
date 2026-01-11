@@ -1,8 +1,15 @@
 import './style.css'
-// import { getHint } from './hints.ts'
+//import { getHint } from './hints.ts'
+import dogHuh from './images/dog-huh.png'
+import hotdog from './images/hotdog.png'
+import hothotdog from './images/hothotdog.png'
+import colddog from './images/colddog.png'
+import icecolddog from './images/icecolddog.png'
+import dogcelebrate from './images/dogcelebrate.png'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<aside class="sidebar">
+<button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+<aside class="sidebar" id="sidebar">
   <h2 class="howto">How to Play</h2>
   <ul>
     <li>Find the secret 5 letter word, you have unlimited guesses.</li>
@@ -12,9 +19,12 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 </aside>  
 <div class="content">
   <div class="header">
-    <a>
-      <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
-    </a>
+    <div class="speech-bubble-container">
+      <p class="gemini speech-bubble"></p>
+      <a>
+        <img src="${dogHuh}" class="logo vanilla" alt="Hinto Logo" />
+      </a>
+    </div>
     <h1>Hinto</h1>
     <p class="guess" id="guess-count">Guesses: 0</p>
   </div>
@@ -24,7 +34,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="card">
     <button id="counter" type="button">Enter</button>
   </div>
-  <p class="gemini"></p>
 </div>
 <div id="guess-list-container" style="position: fixed; right: 2rem; top: 2rem; width: 250px; border-left: 2px solid #e8b66e; padding-left: 1.5rem; max-height: 80vh; overflow-y: auto; background-color: #faf5f0; border-radius: 8px;">
   <h3 style="position: sticky; top: 0; background-color: #faf5f0; margin: 0; padding: 1rem 0; color: #e8b66e; font-weight: 600;">Your Guesses</h3>
@@ -32,11 +41,20 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 </div>
 `
 
+// Sidebar toggle
+const sidebar = document.querySelector<HTMLElement>('#sidebar')!;
+const sidebarToggle = document.querySelector<HTMLButtonElement>('#sidebar-toggle')!;
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
+
 const input = document.querySelector<HTMLInputElement>('#simple-input')!;
 const button = document.querySelector<HTMLButtonElement>('#counter')!;
 const guessCountDisplay = document.querySelector<HTMLParagraphElement>('#guess-count')!;
 const guessList = document.querySelector<HTMLUListElement>('#guess-list')!;
 const geminiText = document.querySelector<HTMLParagraphElement>('.gemini')!;
+const logoImg = document.querySelector<HTMLImageElement>('.logo')!;
 
 let user_guess = '';
 let count = 0;
@@ -48,6 +66,7 @@ function showLoadingIndicator(show: boolean) {
   button.disabled = show;
   if (show) {
     geminiText.textContent = 'Thinking';
+    geminiText.classList.add('active');
     let dots = '';
     loadingInterval = setInterval(() => {
       dots += '.';
@@ -67,6 +86,24 @@ function showLoadingIndicator(show: boolean) {
 
 async function missingLetters() {
   geminiText.textContent = `Guess must be between 3 and 20 letters long.`;
+}
+
+function updateLogoBasedOnCloseness(closeness: number) {
+  let imageName = dogHuh;
+  
+  if (closeness >= 9) {
+    imageName = hothotdog;
+  } else if (closeness >= 6) {
+    imageName = hotdog;
+  } else if (closeness === 5) {
+    imageName = dogHuh;
+  } else if (closeness >= 3) {
+    imageName = colddog;
+  } else if (closeness >= 1) {
+    imageName = icecolddog;
+  }
+  
+  logoImg.src = imageName;
 }
 
 async function guessWord() {
@@ -108,23 +145,25 @@ async function guessWord() {
     const data = await response.json();
     console.log(data);
 
-    if (data.result === 'correct') {
-      // OTHER SUCCESS ACTIONS
-      geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
-      input.disabled = true;
-      button.disabled = true;
-      return;
-    }
+  if (data.result === 'correct') {
+    // OTHER SUCCESS ACTIONS
+    updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
+    logoImg.src = dogcelebrate;
+    geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+    geminiText.classList.add('active');
+    return;
+  }
 
-    const hint = data.hint;
-    geminiText.textContent = hint;
-    guessedWords.push({ guess: user_guess, hint: hint });
+  const hint = data.hint;
+  geminiText.textContent = hint;
+  geminiText.classList.add('active');
+  guessedWords.push({ guess: user_guess, hint: hint });
 
-    // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
-    const closeness = data.closeness;
+  // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
+  const closeness = data.closeness;
+  updateLogoBasedOnCloseness(closeness);
   } catch (error) {
-    console.error('Error fetching data:', error);
-    geminiText.textContent = 'Could not get hint.';
+    console.error('Error fetching data:', error)
   } finally {
     showLoadingIndicator(false);
     // Clear input
