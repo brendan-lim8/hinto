@@ -61,6 +61,27 @@ let count = 0;
 let guessedWords: { guess: string, hint: string }[] = [];
 let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
+function victory() {
+  updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
+  logoImg.src = dogcelebrate;
+  geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+  geminiText.classList.add('active');
+
+  input.style.display = 'none';
+  button.style.display = 'none';
+
+  const playAgainButton = document.createElement('button');
+  playAgainButton.textContent = 'PLAY AGAIN';
+  playAgainButton.id = 'play-again';
+  playAgainButton.type = 'button';
+  playAgainButton.addEventListener('click', () => {
+    location.reload();
+  });
+
+  const card = document.querySelector<HTMLDivElement>('.card')!;
+  card.appendChild(playAgainButton);
+}
+
 function showLoadingIndicator(show: boolean) {
   input.disabled = show;
   button.disabled = show;
@@ -90,7 +111,7 @@ async function missingLetters() {
 
 function updateLogoBasedOnCloseness(closeness: number) {
   let imageName = dogHuh;
-  
+
   if (closeness >= 9) {
     imageName = hothotdog;
   } else if (closeness >= 6) {
@@ -102,7 +123,7 @@ function updateLogoBasedOnCloseness(closeness: number) {
   } else if (closeness >= 1) {
     imageName = icecolddog;
   }
-  
+
   logoImg.src = imageName;
 }
 
@@ -145,23 +166,19 @@ async function guessWord() {
     const data = await response.json();
     console.log(data);
 
-  if (data.result === 'correct') {
-    // OTHER SUCCESS ACTIONS
-    updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
-    logoImg.src = dogcelebrate;
-    geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+    if (data.result === 'correct') {
+      victory();
+      return;
+    }
+
+    const hint = data.hint;
+    geminiText.textContent = hint;
     geminiText.classList.add('active');
-    return;
-  }
+    guessedWords.push({ guess: user_guess, hint: hint });
 
-  const hint = data.hint;
-  geminiText.textContent = hint;
-  geminiText.classList.add('active');
-  guessedWords.push({ guess: user_guess, hint: hint });
-
-  // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
-  const closeness = data.closeness;
-  updateLogoBasedOnCloseness(closeness);
+    // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
+    const closeness = data.closeness;
+    updateLogoBasedOnCloseness(closeness);
   } catch (error) {
     console.error('Error fetching data:', error)
   } finally {
