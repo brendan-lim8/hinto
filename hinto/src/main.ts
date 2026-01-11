@@ -1,5 +1,5 @@
 import './style.css'
-import { getHint } from './hints.ts'
+//import { getHint } from './hints.ts'
 import dogHuh from './images/dog-huh.png'
 import hotdog from './images/hotdog.png'
 import hothotdog from './images/hothotdog.png'
@@ -66,6 +66,7 @@ function showLoadingIndicator(show: boolean) {
   button.disabled = show;
   if (show) {
     geminiText.textContent = 'Thinking';
+    geminiText.classList.add('active');
     let dots = '';
     loadingInterval = setInterval(() => {
       dots += '.';
@@ -161,9 +162,13 @@ async function guessWord() {
   // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
   const closeness = data.closeness;
   updateLogoBasedOnCloseness(closeness);
-
-  // Clear input
-  input.value = '';
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  } finally {
+    showLoadingIndicator(false);
+    // Clear input
+    input.value = '';
+  }
 }
 
 input.addEventListener('input', (e) => {
