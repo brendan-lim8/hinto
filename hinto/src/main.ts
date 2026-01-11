@@ -31,6 +31,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         </div>
         <h1>Hinto</h1>
         <p class="guess" id="guess-count">Guesses: 0</p>
+        <p class="guess" id="word-length"></p>
       </div>
 
       <div class="textbox">
@@ -207,6 +208,8 @@ async function getRandomGameWord() {
 async function initializeGame() {
   target = await getRandomGameWord();
   console.log('Target word:', target);
+  const wordLengthDisplay = document.querySelector<HTMLParagraphElement>('#word-length')!;
+  wordLengthDisplay.textContent = `Word is ${target.length} letters long.`;
 }
 
 initializeGame();
