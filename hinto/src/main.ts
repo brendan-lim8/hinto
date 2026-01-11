@@ -1,5 +1,11 @@
 import './style.css'
-// import { getHint } from './hints.ts'
+import { getHint } from './hints.ts'
+import dogHuh from './images/dog-huh.png'
+import hotdog from './images/hotdog.png'
+import hothotdog from './images/hothotdog.png'
+import colddog from './images/colddog.png'
+import icecolddog from './images/icecolddog.png'
+import dogcelebrate from './images/dogcelebrate.png'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
@@ -16,7 +22,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class="speech-bubble-container">
       <p class="gemini speech-bubble"></p>
       <a>
-        <img src="src/images/dog-huh.png" class="logo vanilla" alt="Hinto Logo" />
+        <img src="${dogHuh}" class="logo vanilla" alt="Hinto Logo" />
       </a>
     </div>
     <h1>Hinto</h1>
@@ -82,21 +88,21 @@ async function missingLetters() {
 }
 
 function updateLogoBasedOnCloseness(closeness: number) {
-  let imageName = 'dog-huh.png';
+  let imageName = dogHuh;
   
   if (closeness >= 9) {
-    imageName = 'hothotdog.png';
+    imageName = hothotdog;
   } else if (closeness >= 6) {
-    imageName = 'hotdog.png';
+    imageName = hotdog;
   } else if (closeness === 5) {
-    imageName = 'dog-huh.png';
+    imageName = dogHuh;
   } else if (closeness >= 3) {
-    imageName = 'colddog.png';
+    imageName = colddog;
   } else if (closeness >= 1) {
-    imageName = 'icecolddog.png';
+    imageName = icecolddog;
   }
   
-  logoImg.src = `src/images/${imageName}`;
+  logoImg.src = imageName;
 }
 
 async function guessWord() {
@@ -141,7 +147,7 @@ async function guessWord() {
   if (data.result === 'correct') {
     // OTHER SUCCESS ACTIONS
     updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
-    logoImg.src = 'src/images/dogcelebrate.png';
+    logoImg.src = dogcelebrate;
     geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
     geminiText.classList.add('active');
     return;
