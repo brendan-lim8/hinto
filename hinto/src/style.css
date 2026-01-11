@@ -78,9 +78,6 @@ body {
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  width: 100%;
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
 }
 
 .sidebar.collapsed ~ .content {
@@ -259,3 +256,58 @@ button:focus-visible {
   border-right: 10px solid transparent;
   border-top: 10px solid #e8b66e;
 }
+
+.guess-list-container {
+  width: 22%;
+  min-width: 220px;
+  max-width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: #faf5f0;
+  border-left: 2px solid #e8b66e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.guess-list-container h3 {
+  color: #e8b66e;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+#guess-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh; /* ensure full viewport height */
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering of children */
+  gap: 2rem; /* space between center and guess list */
+}
+
+.sidebar.collapsed ~ .main-layout {
+  margin-left: 0;
+}
+
+/* Wrap the actual center content in a column to center its items */
+.center-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; /* take available space */
+  max-width: 600px; /* optional: prevent it from being too wide */
+}
+
+
