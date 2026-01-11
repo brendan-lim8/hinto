@@ -46,6 +46,7 @@ const button = document.querySelector<HTMLButtonElement>('#counter')!;
 const guessCountDisplay = document.querySelector<HTMLParagraphElement>('#guess-count')!;
 const guessList = document.querySelector<HTMLUListElement>('#guess-list')!;
 const geminiText = document.querySelector<HTMLParagraphElement>('.gemini')!;
+const logoImg = document.querySelector<HTMLImageElement>('.logo')!;
 
 let user_guess = '';
 let count = 0;
@@ -76,6 +77,24 @@ function showLoadingIndicator(show: boolean) {
 
 async function missingLetters() {
   geminiText.textContent = `Guess must be between 3 and 20 letters long.`;
+}
+
+function updateLogoBasedOnCloseness(closeness: number) {
+  let imageName = 'dog-huh.png';
+  
+  if (closeness >= 9) {
+    imageName = 'hothotdog.png';
+  } else if (closeness >= 6) {
+    imageName = 'hotdog.png';
+  } else if (closeness === 5) {
+    imageName = 'dog-huh.png';
+  } else if (closeness >= 3) {
+    imageName = 'colddog.png';
+  } else if (closeness >= 1) {
+    imageName = 'icecolddog.png';
+  }
+  
+  logoImg.src = `src/images/${imageName}`;
 }
 
 async function guessWord() {
@@ -117,28 +136,24 @@ async function guessWord() {
     const data = await response.json();
     console.log(data);
 
-    if (data.result === 'correct') {
-      // OTHER SUCCESS ACTIONS
-      geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
-      input.disabled = true;
-      button.disabled = true;
-      return;
-    }
-
-    const hint = data.hint;
-    geminiText.textContent = hint;
-    guessedWords.push({ guess: user_guess, hint: hint });
-
-    // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
-    const closeness = data.closeness;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    geminiText.textContent = 'Could not get hint.';
-  } finally {
-    showLoadingIndicator(false);
-    // Clear input
-    input.value = '';
+  if (data.result === 'correct') {
+    // OTHER SUCCESS ACTIONS
+    updateLogoBasedOnCloseness(10); // Use 10 to trigger hothotdog
+    logoImg.src = 'src/images/dogcelebrate.png';
+    geminiText.textContent = `Congratulations! You guessed the word "${target}" in ${count} tries!`;
+    return;
   }
+
+  const hint = data.hint;
+  geminiText.textContent = hint;
+  guessedWords.push({ guess: user_guess, hint: hint });
+
+  // USE THIS FOR PICTURE OF DOG BASED ON CLOSENESS (0 - 9)
+  const closeness = data.closeness;
+  updateLogoBasedOnCloseness(closeness);
+
+  // Clear input
+  input.value = '';
 }
 
 input.addEventListener('input', (e) => {
