@@ -44,36 +44,27 @@ body {
   z-index: 10;
   color: #242424;
   transition: transform 0.3s ease;
+  
 }
 
 .sidebar.collapsed {
   transform: translateX(-100%);
 }
-
-#app>.sidebar-toggle {
+#sidebar-toggle {
   position: fixed;
   left: 250px;
   top: 1rem;
-  width: 50px;
-  height: 50px;
-  background-color: #e8b66e;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.5em;
-  cursor: pointer;
   transition: left 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 11;
+  z-index:20;
+  border: 2px solid #956d36;
 }
 
-#app>.sidebar.collapsed~.content {
-  margin-left: 0;
+#sidebar-toggle.collapsed {
+  left: 0.5rem;
 }
 
-#app>.sidebar.collapsed~.sidebar-toggle {
+
+#app > .sidebar.collapsed ~ .sidebar-toggle {
   left: 0;
 }
 
@@ -89,9 +80,6 @@ body {
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  width: 100%;
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
 }
 
 .sidebar.collapsed~.content {
@@ -279,3 +267,58 @@ button:focus-visible {
   border-right: 10px solid transparent;
   border-top: 10px solid #e8b66e;
 }
+
+.guess-list-container {
+  width: 22%;
+  min-width: 220px;
+  max-width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: #faf5f0;
+  border-left: 2px solid #e8b66e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.guess-list-container h3 {
+  color: #e8b66e;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+#guess-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh; /* ensure full viewport height */
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering of children */
+  gap: 2rem; /* space between center and guess list */
+}
+
+.sidebar.collapsed ~ .main-layout {
+  margin-left: 0;
+}
+
+/* Wrap the actual center content in a column to center its items */
+.center-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; /* take available space */
+  max-width: 600px; /* optional: prevent it from being too wide */
+}
+
+
