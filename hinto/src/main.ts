@@ -218,8 +218,24 @@ button.addEventListener('click', () => {
   }
 });
 
-// Fetch a target word
-const response = await fetch('https://random-word-api.vercel.app/api?words=1&length=5');
-const data = await response.json();
-const target = data[0].toLowerCase();
-console.log('Target word:', target);
+let target: string;
+
+async function getRandomGameWord() {
+  try {
+    const response = await fetch('/words.txt');
+    const text = await response.text();
+    const words = text.split('\n').filter(word => word.trim() !== '');
+    const randomWord = words[Math.floor(Math.random() * words.length)];
+    return randomWord.toLowerCase();
+  } catch (error) {
+    console.error("Error fetching word from file:", error);
+    return "coffee"; // Fallback word
+  }
+}
+
+async function initializeGame() {
+  target = await getRandomGameWord();
+  console.log('Target word:', target);
+}
+
+initializeGame();
