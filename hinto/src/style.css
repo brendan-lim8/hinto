@@ -50,7 +50,7 @@ body {
   transform: translateX(-100%);
 }
 
-#app > .sidebar-toggle {
+#app>.sidebar-toggle {
   position: fixed;
   left: 250px;
   top: 1rem;
@@ -69,15 +69,15 @@ body {
   z-index: 11;
 }
 
-#app > .sidebar.collapsed ~ .content {
+#app>.sidebar.collapsed~.content {
   margin-left: 0;
 }
 
-#app > .sidebar.collapsed ~ .sidebar-toggle {
+#app>.sidebar.collapsed~.sidebar-toggle {
   left: 0;
 }
 
-#app > .sidebar-toggle:hover {
+#app>.sidebar-toggle:hover {
   background-color: #d4a156;
 }
 
@@ -94,7 +94,7 @@ body {
   transition: margin-left 0.3s ease;
 }
 
-.sidebar.collapsed ~ .content {
+.sidebar.collapsed~.content {
   margin-left: 0;
 }
 
@@ -147,14 +147,23 @@ h1 {
 .logo:hover {
   filter: drop-shadow(0 0 8px rgba(232, 182, 110, 0.3));
 }
+
 #guess-count {
   color: #d4a156;
   font-size: 1.1em;
   margin: 0.5rem 0 0 0;
   font-weight: 500;
 }
+
+#word-length {
+  color: #d4a156;
+  font-size: 1.1em;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
+
 .textbox {
-  
+
   width: 100%;
   max-width: 400px;
   margin-bottom: 1.5rem;
