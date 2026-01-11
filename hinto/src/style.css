@@ -68,7 +68,7 @@ body {
   left: 0;
 }
 
-#app > .sidebar-toggle:hover {
+#app>.sidebar-toggle:hover {
   background-color: #d4a156;
 }
 
@@ -82,7 +82,7 @@ body {
   text-align: center;
 }
 
-.sidebar.collapsed ~ .content {
+.sidebar.collapsed~.content {
   margin-left: 0;
 }
 
@@ -135,14 +135,23 @@ h1 {
 .logo:hover {
   filter: drop-shadow(0 0 8px rgba(232, 182, 110, 0.3));
 }
+
 #guess-count {
   color: #d4a156;
   font-size: 1.1em;
   margin: 0.5rem 0 0 0;
   font-weight: 500;
 }
+
+#word-length {
+  color: #d4a156;
+  font-size: 1.1em;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
+
 .textbox {
-  
+
   width: 100%;
   max-width: 400px;
   margin-bottom: 1.5rem;

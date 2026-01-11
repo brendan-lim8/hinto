@@ -96,7 +96,7 @@ Your task is to provide a helpful hint based on the new guess.
 **Instructions:**
 1.  **Analyze the connection:** Compare the new guess "${cleaned_guess}" to the target word "${cleaned_target}".
 2.  **Consider the history:** Use the previous hints to give a progressively more revealing hint. Don't give hints too similar to past ones. Instead, offer insight about how the target word is used.
-3.  **Give a helpful hint:** The hint should connect the guess to the target word. If they are far off, give a more general direction (e.g., "Think of a type of animal."). As the guess gets closer, the hint should be more specific.
+3.  **Give a helpful hint:** The hint should connect the guess to the target word. If they are far off, give a more general direction (e.g., "Not quite - think of something living."). As the guess gets closer, the hint should be more specific.
 4.  **Keep it short:** The hint must be a single sentence under 10 words.
 5.  **Provide a closeness score:** Rate the closeness of the guess to the target on a scale of 0-10 (0=unrelated, 3=some connection, 5=similar category, 8=very close, 10=identical). Base the score on meaning and category.
 
